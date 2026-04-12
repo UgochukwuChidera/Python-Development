@@ -2,8 +2,9 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.next = None
+        self.previous = None
 
-class LinkedList:
+class DoublyLinkedList:
     def __init__(self):
         self.head = None
         self.size = 0
@@ -37,22 +38,48 @@ class LinkedList:
             while last.next is not None:
                 last = last.next
             new_node = Node(value)
+            new_node.previous = last
             last.next = new_node
             self.size += 1
+
+    def info(self):
+        if self.head is None:
+            return
+        last = self.head
+        if self.head.next is None:
+            info = f"\n[value: {last.value} -> next: None -> previous: None]"
+            return info
+        else:
+            info = f"\n[value: {last.value} -> next: {last.next.value} -> previous: None]"
+        if last.next.next is None:
+            info += f",\n[value: {last.next.value} -> next: None -> previous: {last.value}]"
+            return info
+        while last.next.next is not None:
+            last = last.next
+            info += f",\n[value: {last.value} -> next: {last.next.value} -> previous: {last.previous.value}]"
+            if last.next.next is None:
+                info += f",\n[value: {last.next.value} -> next: None -> previous: {last.value}]"
+                return info
+        return info
 
     def delete(self, value):
         if self.head is None:
             return
         if value == self.head.value:
             self.head = self.head.next
+            if self.head:
+                self.head.previous = None
             self.size -= 1
             return
 
         last = self.head
         while last and last.next:
             if value == last.next.value:
-                new_node = last.next.next
+                node_to_remove = last.next
+                new_node = node_to_remove.next
                 last.next = new_node
+                if new_node:
+                    new_node.previous = last
                 self.size -= 1
                 return
             last = last.next
@@ -74,6 +101,7 @@ class LinkedList:
         if index == 0:
             new_node = Node(value)
             new_node.next = self.head
+            self.head.previous = new_node
             self.head = new_node
             self.size += 1
         else:
@@ -84,26 +112,37 @@ class LinkedList:
             new_node = Node(value)
             if last.next is not None:
                 new_node.next = last.next
+                new_node.next.previous = new_node
             else:
                 new_node.next = None
+            new_node.previous = last
             last.next = new_node
             self.size += 1
 
     def pop(self, index):
         if index < 0 or index >= self.size or self.head is None:
             raise IndexError("Index out of bounds!")
-        if index == 0:
-            val = self.head.value
-            self.head = self.head.next
-            self.size -= 1
-            return val
-
         last = self.head
+        if index == 0:
+            if self.size > 1:
+                val = self.head.value
+                self.head = self.head.next
+                self.head.previous = None
+                self.size -= 1
+                return val
+            else:
+                val = self.head.value
+                self.head = None
+                self.size -= 1
+                return val
         for i in range(index - 1):
             last = last.next
+        node_to_pop = last.next
         val = last.next.value
-        new_node = last.next.next
+        new_node = node_to_pop.next
         last.next = new_node
+        if new_node:
+            new_node.previous = last
         self.size -= 1
         return val
 
@@ -114,15 +153,16 @@ class LinkedList:
         else:
             new_node = Node(value)
             new_node.next = self.head
+            self.head.previous = new_node
             self.head = new_node
             self.size += 1
 
     def print(self):
-        if self.head is None:
-            print([])
-            return
         last = self.head
         ll = []
+        if last is None:
+            print([])
+            return
         while last.next is not None:
             ll.append(last.value)
             last = last.next
@@ -130,20 +170,12 @@ class LinkedList:
         print(ll)
 
 if __name__ == "__main__":
-    ll = LinkedList()
-    ll.append(2)
-    ll.append(3)
-    ll.append(4)
-    ll.append(5)
-    ll.prepend(1)
-    ll.prepend(0)
-    ll.insert(6, 2)
-    ll.delete(5)
+    ll = DoublyLinkedList()
+    ll.append(1)
     ll.print()
-
-    get = ll.get(2)
-    contains = ll.__contains__(4)
-    info = ll.__repr__()
-    val = ll.pop(2)
-    size = ll.size
-    print(get, size, contains, info, val)
+    x = ll.pop(0)
+    print(ll.info())
+    ll.append(2)
+    ll.append(2)
+    ll.print()
+    print(ll.info())
