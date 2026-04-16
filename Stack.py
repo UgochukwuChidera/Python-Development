@@ -50,9 +50,12 @@ class Stack:
         return val
 
 stack = Stack()
+print(stack.is_empty())
 stack.push(5)
+print(stack.is_empty())
 stack.push(25)
 stack.push(15)
+print(stack.__len__())
 print(stack.__repr__())
 print(stack.peek())
 print(stack.pop())
