@@ -42,26 +42,6 @@ class DoublyLinkedList:
             last.next = new_node
             self.size += 1
 
-    def info(self):
-        if self.head is None:
-            return
-        last = self.head
-        if self.head.next is None:
-            info = f"\n[value: {last.value} -> next: None -> previous: None]"
-            return info
-        else:
-            info = f"\n[value: {last.value} -> next: {last.next.value} -> previous: None]"
-        if last.next.next is None:
-            info += f",\n[value: {last.next.value} -> next: None -> previous: {last.value}]"
-            return info
-        while last.next.next is not None:
-            last = last.next
-            info += f",\n[value: {last.value} -> next: {last.next.value} -> previous: {last.previous.value}]"
-            if last.next.next is None:
-                info += f",\n[value: {last.next.value} -> next: None -> previous: {last.value}]"
-                return info
-        return info
-
     def delete(self, value):
         if self.head is None:
             return
@@ -156,18 +136,6 @@ class DoublyLinkedList:
             self.head.previous = new_node
             self.head = new_node
             self.size += 1
-
-    def print(self):
-        last = self.head
-        ll = []
-        if last is None:
-            print([])
-            return
-        while last.next is not None:
-            ll.append(last.value)
-            last = last.next
-        ll.append(last.value)
-        print(ll)
 
 if __name__ == "__main__":
     ll = DoublyLinkedList()
