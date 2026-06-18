@@ -140,10 +140,8 @@ class DoublyLinkedList:
 if __name__ == "__main__":
     ll = DoublyLinkedList()
     ll.append(1)
-    ll.print()
     x = ll.pop(0)
-    print(ll.info())
+    print(ll.__repr__())
     ll.append(2)
     ll.append(2)
-    ll.print()
-    print(ll.info())
+    print(ll.__repr__())
